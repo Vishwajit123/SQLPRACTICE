@@ -907,94 +907,112 @@ WHERE DEPTNO IN(SELECT DEPTNO FROM EMP WHERE COMM IS NOT NULL ) AND
 
 
 
-
-
-
-
-
--- Display all columns from the EMPLOYEES table.
-
--- Show only the names of employees.
-
--- Show the employee names and their salaries.
-
--- Show employee names with an alias as “Employee Name”.
-
--- Display names and departments of all employees.
-
--- Show only unique departments from the table.
-
--- Show employee names along with their joining dates.
-
--- Show employee names and the cities they belong to.
-
--- Display salaries with an alias “Monthly Salary”.
-
--- Show employee ID and name together.
-
-
-
-
--- Show employee name and annual salary (salary multiplied by 12).
-
--- Display names with a 10% hike in salary as a new column.
-
--- Show all employee names in uppercase letters.
-
--- Show all city names in lowercase.
-
--- Concatenate name and department with a hyphen (e.g., "Rahul - IT").
-
--- Display only the first 3 characters of each employee name.
-
--- Show employee names and the length of each name.
-
--- Show employee name and the year of joining.
-
--- Label employees as “Senior” if salary > 60000, otherwise “Junior”.
-
--- Display a sentence like “Rahul works in Mumbai” using name and city.
-
-
-
--- WAQTD ALL THE DETAILS OF AN EMPLOYEES ALONG WITH ANNAUL SALARY ?
--- WAQTDALL THE DETAILS OF AN EMPLOYEES ALONG WITH 10% HIKE 
---       IN ANNUAL SALARY FOR ALL THE EMPLOYEE ?
--- WAQTD SAL ANNAUL SALARY HALF_TERM SALARY AND QUERTER TERM SALARY 
---           fOR ALL THE EMPLOYEES ?
--- WAQTD ANNUAL SALARY WITH 20% DEDUCTION  FOR ALL THE EMPLOYEES ?
--- WAQTD ALL THE DETAILS ALONG WITH 100 RS PENALTY FOR ALL THE EMPLOYEES ?
--- WAQTD TOTAL SALARY NEEDED TO PAY FOR EACH AND EVERY EMPLOYEE ?
--- WAQTD ANNAUL SALARY  AND HALF_TERM SALARY WITH ALIAS NAME 
---          FOR ALL THE EMPLOYEES ?
--- WAQTD ALL THE DETAILS OF AN EMPLOYEES ALONG WITH 12% HIKE 
---         IN ANNUAL SALARY WITH ALIAS NAME FOR ALL THE EMPLOYEES 
--- WAQTD JOB AS DESIGNATION HIREDATE AS JOINING DATE MGR AS 
---        REPORTING MANAGER NUMBER FOR ALL THE EMPLOYEES ?
--- WAQTD JOB  WITH DEPTNO FOR ALL THE EMPLOYEES USING ALIAS AS
---        DESIGNATION FOR THE JOB AND DNO FOR THE DEPTNO ?
--- WAQTD ALL THE DETAILS OF AN EMPLOYEES ALONG WITH 
---     50 RS HIKE IN SAL USE ALIAS AS BONUS FOR ALL THE EMPLOYEE ?
-
 -- ASSIGNMENT ON NESTED SUB QUERY:
 
--- 61. WAQTD 2ND MINIMUM SALARY
+--- 61. WAQTD 2ND MINIMUM SALARY
+SELECT MAX(SAL) SECMAX
+FROM EMP WHERE SAL <(SELECT MAX(SAL) FROM EMP);
 
 -- 62. WAQTD 5TH MAXIMUM SALARY
+SELECT MAX(SAL) FIFTHMAX
+FROM EMP
+WHERE SAL =
+        (SELECT MAX(SAL) FROM EMP
+WHERE SAL <
+        (SELECT MAX(SAL) FROM EMP
+WHERE SAL < 
+        (SELECT MAX(SAL) FROM EMP
+WHERE SAL < 
+        (SELECT MAX(SAL) FROM EMP
+WHERE SAL < 
+        (SELECT MAX(SAL) FROM EMP        
+)))));
+        
+
 
 -- 63. WAQTD NAME OF THE EMPLOYEE EARNING 3RD MAXIMUM SALARY
+SELECT ENAME
+FROM EMP
+WHERE SAL = (SELECT MAX(SAL) FROM EMP
+    WHERE SAL < (SELECT MAX(SAL) FROM EMP
+        WHERE SAL < (SELECT MAX(SAL) FROM EMP
+        )
+    )
+);
 
 -- 64.WAQTD EMPNO OF THE EMPLOYEE EARNING 2D MAXIMUM SALARY
-
+SELECT EMPNO FROM EMP
+WHERE SAL = (SELECT MAX(SAL) FROM EMP
+WHERE SAL < (SELECT MAX(SAL) FROM EMP));
 -- 65. WAQTD DEPARTMENT NAME OF AN EMPLOYEE GETTING 4TH MAX SAL
-
--- 66. WAQTD DETAILS OF THE EMPLOYEE WHO WAS HIRED 2nd 67.WAQTD NAME OF THE EMPLOYEE HIRED BEFORE THE LAST EMPLOYEE
-
+SELECT DNAME 
+FROM DEPT
+WHERE DEPTNO IN (
+    SELECT DEPTNO 
+    FROM EMP 
+    WHERE SAL = (
+        SELECT MAX(SAL) FROM EMP
+        WHERE SAL < (
+            SELECT MAX(SAL) FROM EMP
+            WHERE SAL < (
+                SELECT MAX(SAL) FROM EMP
+                WHERE SAL < (
+                    SELECT MAX(SAL) FROM EMP
+                )
+            )
+        )
+    )
+);
+-- 66. WAQTD DETAILS OF THE EMPLOYEE WHO WAS HIRED 2nd 
+SELECT * FROM EMP
+WHERE HIREDATE = (SELECT MIN(HIREDATE) FROM EMP 
+WHERE HIREDATE > (SELECT MIN(HIREDATE) FROM EMP)
+);
+--67.WAQTD NAME OF THE EMPLOYEE HIRED BEFORE THE LAST EMPLOYEE
+SELECT ENAME FROM EMP
+WHERE HIREDATE = (SELECT MAX(HIREDATE) FROM EMP
+WHERE HIREDATE < (SELECT MAX(HIREDATE) FROM EMP)
+);
 -- 68. WAQTD LOC OF THE EMPLOYEE WHO WAS HIRED FIRST
-
+SELECT LOC FROM DEPT
+WHERE DEPTNO IN(SELECT DEPTNO FROM EMP
+WHERE HIREDATE = (SELECT MIN(HIREDATE) FROM EMP
+));
 -- 69. WAQTD DETAILS OF THE EMPLOYEE EARNING 7TH MINIMUM SALARY
-
+SELECT *
+FROM EMP
+WHERE SAL = (
+    SELECT MIN(SAL) FROM EMP
+    WHERE SAL > (
+SELECT MIN(SAL) FROM EMP
+        WHERE SAL > (
+SELECT MIN(SAL) FROM EMP
+            WHERE SAL > (
+SELECT MIN(SAL) FROM EMP
+                WHERE SAL > (
+SELECT MIN(SAL) FROM EMP
+                    WHERE SAL > (
+SELECT MIN(SAL) FROM EMP
+                        WHERE SAL > (
+ SELECT MIN(SAL) FROM EMP
+                        )
+                    )
+                )
+            )
+        )
+    )
+);
 -- 70. WAQTD DNAME OF EMPLOYEE GETTING 2ND MAXIMUM SALARY
+SELECT DNAME 
+FROM DEPT
+WHERE DEPTNO IN (
+SELECT DEPTNO FROM EMP
+WHERE SAL = (
+        SELECT MAX(SAL) FROM EMP
+WHERE SAL < (SELECT MAX(SAL) FROM EMP)
+    )
+);
+
 
 
 -- ASSIGNMENT ON EMP AND MANAGER RELATION .
